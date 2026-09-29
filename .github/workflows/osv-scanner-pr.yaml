@@ -10,6 +10,14 @@ permissions:
   contents: read
   actions: read
 
+# The action version is load-bearing, not cosmetic. The reusable workflow
+# pins the Go it runs govulncheck with and sets GOTOOLCHAIN=local, so a
+# release older than this repo's `go` directive cannot load the packages at
+# all: v2.3.8 ships Go 1.26.2 against a go.mod asking for 1.26.4, and the scan
+# failed with "go.mod requires go >= 1.26.4 (running go 1.26.2)". It still
+# uploaded a report -- 14 stdlib advisories attributed to a module tree it had
+# never read -- so the red looked like a vulnerability and was a toolchain
+# mismatch. Raise this together with the `go` directive, never below it.
 jobs:
   scan-pr:
-    uses: "google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.3.8"
+    uses: "google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.6.0"
