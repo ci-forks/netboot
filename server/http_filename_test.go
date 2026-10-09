@@ -261,7 +261,9 @@ func TestStaticBooterServesCmdlineFilesByName(t *testing.T) {
 			t.Fatalf("GET %s: %s", url, err)
 		}
 		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close()
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			t.Fatalf("closing %s: %s", url, closeErr)
+		}
 		if err != nil {
 			t.Fatalf("reading %s: %s", url, err)
 		}
